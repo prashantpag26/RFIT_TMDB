@@ -1,4 +1,4 @@
-package com.example.okhttp;
+package com.example.okhttp.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,9 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+import com.example.okhttp.model.Example;
+import com.example.okhttp.utils.ApiClient;
+import com.example.okhttp.MovieResponse;
+import com.example.okhttp.adpater.MoviesAdapter;
+import com.example.okhttp.R;
+import com.example.okhttp.Result;
+import com.example.okhttp.interfaces.ApiInterface;
 
 import java.util.List;
 
@@ -21,7 +30,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private final static String API_KEY = "43be33c47b037d9bec821dc389588e3c";
+    private final static String API_KEY = "AIzaSyCPDJEgH1UWxbrP4A5fQSzgabytRuxtpoo";
+    private final static String KEY = "PL6gx4Cwl9DGBsvRxJJOzG4r4k_zLKrnxl";
+    private final static String PART = "snippet";
+    //    private final static String API_KEY = "43be33c47b037d9bec821dc389588e3c";
     private MoviesAdapter mAdapter;
     private RecyclerView recyclerView;
 
@@ -48,16 +60,19 @@ public class MainActivity extends AppCompatActivity
         }
         final ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
-        final Call<MovieResponse> movieCall = apiInterface.getTopRatedMovies(API_KEY);
-        movieCall.enqueue(new Callback<MovieResponse>() {
+        final Call<Example> movieCall = apiInterface.getTopRatedMovies(PART, KEY, API_KEY);
+        movieCall.enqueue(new Callback<Example>() {
             @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                List<Result> movies = response.body().getResults();
-                recyclerView.setAdapter(new MoviesAdapter(movies, R.layout.list_item_movie, getApplicationContext()));
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                for (int i = 0; i < 5; i++) {
+                    Log.e("LOLOL", response.body().getItems().get(i).getSnippet().getTitle() + "");
+                }
+//                List<Result> movies = response.body().getResults();
+//                recyclerView.setAdapter(new MoviesAdapter(movies, R.layout.list_item_movie, getApplicationContext()));
             }
 
             @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
+            public void onFailure(Call<Example> call, Throwable t) {
 
             }
         });

@@ -1,4 +1,4 @@
-package com.example.okhttp;
+package com.example.okhttp.adpater;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.okhttp.R;
+import com.example.okhttp.Result;
 
 import java.util.List;
 
