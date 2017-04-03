@@ -1,7 +1,9 @@
 
 package com.example.okhttp.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,7 +26,7 @@ public class Example {
     private PageInfo pageInfo;
     @SerializedName("items")
     @Expose
-    private List<Item> items = null;
+    private ArrayList<Item> items = null;
 
     public String getKind() {
         return kind;
@@ -66,11 +68,11 @@ public class Example {
         this.pageInfo = pageInfo;
     }
 
-    public List<Item> getItems() {
+    public ArrayList<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
 

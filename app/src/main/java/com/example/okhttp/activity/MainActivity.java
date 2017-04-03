@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 
 import com.example.okhttp.model.Example;
+import com.example.okhttp.model.Item;
 import com.example.okhttp.utils.ApiClient;
 import com.example.okhttp.MovieResponse;
 import com.example.okhttp.adpater.MoviesAdapter;
@@ -22,6 +23,7 @@ import com.example.okhttp.R;
 import com.example.okhttp.Result;
 import com.example.okhttp.interfaces.ApiInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,9 +35,17 @@ public class MainActivity extends AppCompatActivity
     private final static String API_KEY = "AIzaSyCPDJEgH1UWxbrP4A5fQSzgabytRuxtpoo";
     private final static String KEY = "PL6gx4Cwl9DGBsvRxJJOzG4r4k_zLKrnxl";
     private final static String PART = "snippet";
+    private static String NEXTTOCKEN = "";
+    private final static String MAXRESULT = "10";
+    private MoviesAdapter moviesAdapter;
+
     //    private final static String API_KEY = "43be33c47b037d9bec821dc389588e3c";
     private MoviesAdapter mAdapter;
     private RecyclerView recyclerView;
+    private ApiInterface apiInterface;
+    private ArrayList<Item> movies;
+    private ApiInterface nextApiInterface;
+    private Integer totalPageResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +59,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        movies = new ArrayList<>();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
 //        recyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
@@ -58,16 +68,45 @@ public class MainActivity extends AppCompatActivity
         if (recyclerView != null) {
             recyclerView.setLayoutManager(mLayoutManager);
         }
-        final ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        nextApiInterface = ApiClient.getClient().create(ApiInterface.class);
 
-        final Call<Example> movieCall = apiInterface.getTopRatedMovies(PART, KEY, API_KEY);
+        final Call<Example> movieCall = apiInterface.getFirstMovies(PART, KEY, API_KEY, MAXRESULT);
         movieCall.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
-                for (int i = 0; i < 5; i++) {
+
+                for (int i = 0; i < 10; i++) {
                     Log.e("LOLOL", response.body().getItems().get(i).getSnippet().getTitle() + "");
                 }
-//                List<Result> movies = response.body().getResults();
+                Log.e("LOLOL", response.body().getPageInfo().getTotalResults() + "");
+                NEXTTOCKEN = response.body().getNextPageToken();
+                totalPageResult = response.body().getPageInfo().getTotalResults();
+                movies = response.body().getItems();
+                moviesAdapter = new MoviesAdapter(movies, R.layout.list_item_movie, MainActivity.this,totalPageResult);
+                recyclerView.setAdapter(moviesAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void nextCall() {
+        final Call<Example> movieNextCall = nextApiInterface.getNextMovies(PART, KEY, API_KEY, MAXRESULT, NEXTTOCKEN);
+        Log.e("LOLOL", movieNextCall.request().url() + "");
+        movieNextCall.enqueue(new Callback<Example>() {
+            @Override
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                Log.e("LOLOL", response.body().getItems().get(0).getSnippet().getTitle() + "");
+                for (int i = 0; i < 10; i++) {
+//                    Log.e("LOLOL", response.body().getItems().get(i).getSnippet().getTitle() + "");
+                }
+                NEXTTOCKEN = response.body().getNextPageToken();
+                movies.addAll(response.body().getItems());
+                moviesAdapter.notifyDataSetChanged();
 //                recyclerView.setAdapter(new MoviesAdapter(movies, R.layout.list_item_movie, getApplicationContext()));
             }
 
