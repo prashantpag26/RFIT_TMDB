@@ -1,10 +1,13 @@
 
 package com.example.okhttp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class High {
+public class High implements Parcelable{
 
     @SerializedName("url")
     @Expose
@@ -15,6 +18,22 @@ public class High {
     @SerializedName("height")
     @Expose
     private Integer height;
+
+    protected High(Parcel in) {
+        url = in.readString();
+    }
+
+    public static final Creator<High> CREATOR = new Creator<High>() {
+        @Override
+        public High createFromParcel(Parcel in) {
+            return new High(in);
+        }
+
+        @Override
+        public High[] newArray(int size) {
+            return new High[size];
+        }
+    };
 
     public String getUrl() {
         return url;
@@ -40,4 +59,13 @@ public class High {
         this.height = height;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(url);
+    }
 }

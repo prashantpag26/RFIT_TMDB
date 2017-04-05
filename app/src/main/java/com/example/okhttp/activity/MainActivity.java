@@ -1,5 +1,6 @@
 package com.example.okhttp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,15 +17,13 @@ import android.view.MenuItem;
 
 import com.example.okhttp.model.Example;
 import com.example.okhttp.model.Item;
+import com.example.okhttp.model.Snippet;
 import com.example.okhttp.utils.ApiClient;
-import com.example.okhttp.MovieResponse;
 import com.example.okhttp.adpater.MoviesAdapter;
 import com.example.okhttp.R;
-import com.example.okhttp.Result;
 import com.example.okhttp.interfaces.ApiInterface;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -127,27 +126,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -172,5 +150,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void sendData(Item item){
+        Intent intent = new Intent(MainActivity.this,ViewActivity.class);
+        intent.putExtra("resource",item.getSnippet().getResourceId());
+        intent.putExtra("snippet",item.getSnippet());
+        intent.putExtra("high",item.getSnippet().getThumbnails().getHigh());
+
+        startActivity(intent);
     }
 }

@@ -1,10 +1,13 @@
 
 package com.example.okhttp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Snippet {
+public class Snippet implements Parcelable {
 
     @SerializedName("publishedAt")
     @Expose
@@ -33,6 +36,27 @@ public class Snippet {
     @SerializedName("resourceId")
     @Expose
     private ResourceId resourceId;
+
+    protected Snippet(Parcel in) {
+        publishedAt = in.readString();
+        channelId = in.readString();
+        title = in.readString();
+        description = in.readString();
+        channelTitle = in.readString();
+        playlistId = in.readString();
+    }
+
+    public static final Creator<Snippet> CREATOR = new Creator<Snippet>() {
+        @Override
+        public Snippet createFromParcel(Parcel in) {
+            return new Snippet(in);
+        }
+
+        @Override
+        public Snippet[] newArray(int size) {
+            return new Snippet[size];
+        }
+    };
 
     public String getPublishedAt() {
         return publishedAt;
@@ -106,4 +130,18 @@ public class Snippet {
         this.resourceId = resourceId;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(publishedAt);
+        dest.writeString(channelId);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(channelTitle);
+        dest.writeString(playlistId);
+    }
 }

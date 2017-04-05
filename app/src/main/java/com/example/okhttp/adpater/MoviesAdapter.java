@@ -2,7 +2,6 @@ package com.example.okhttp.adpater;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.okhttp.R;
-import com.example.okhttp.Result;
 import com.example.okhttp.activity.MainActivity;
 import com.example.okhttp.model.Item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
+    public void onBindViewHolder(MovieViewHolder holder, final int position) {
         holder.movieTitle.setText(results.get(position).getSnippet().getTitle());
 //        holder.data.setText(results.get(position).getSnippet().ge);
         holder.movieDescription.setText(results.get(position).getSnippet().getDescription());
@@ -49,6 +46,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 ((MainActivity) activity).nextCall();
             }
         }
+        holder.movieTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)activity).sendData(results.get(position));
+            }
+        });
 
     }
 
