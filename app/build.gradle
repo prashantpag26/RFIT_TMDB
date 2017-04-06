@@ -29,5 +29,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.android.support:recyclerview-v7:25.2.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
